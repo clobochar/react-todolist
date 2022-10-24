@@ -6,17 +6,26 @@ import Input from "./components/Input";
 import "./App.css";
 
 export default function App() {
+  function uuidv4() {
+    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
+      (
+        c ^
+        (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
+      ).toString(16)
+    );
+  }
+
   let todos = [
     {
-      id: "1",
+      id: uuidv4(),
       title: "buy milk",
     },
     {
-      id: "2",
+      id: uuidv4(),
       title: "pay bill",
     },
     {
-      id: "3",
+      id: uuidv4(),
       title: "send flowers",
     },
   ];
@@ -24,11 +33,15 @@ export default function App() {
   const [todo, setTodo] = useState(todos);
 
   const addTodo = (value) => {
-    setTodo((prev) => [...prev, value]);
+    const newValue = {
+      title: value,
+      id: uuidv4(),
+    };
+    setTodo((prev) => [...prev, newValue]);
   };
 
-  const deleteTodo = (itemIndex) => {
-    setTodo((prev) => [...prev.filter((item, index) => index !== itemIndex)]);
+  const deleteTodo = (id) => {
+    setTodo((prev) => [...prev.filter((item, index) => item.id !== id)]);
   };
 
   return (
@@ -41,8 +54,10 @@ export default function App() {
         <List>
           {todo.map((singleTodo, index) => {
             return (
-              <ToDoItem todo={singleTodo.title} key={`todo-${index}`}>
-                <button onClick={() => deleteTodo(index)}>Delete</button>
+              <ToDoItem todo={singleTodo.title} key={singleTodo.id}>
+                <button onClick={() => deleteTodo(singleTodo.id)}>
+                  Delete
+                </button>
               </ToDoItem>
             );
           })}

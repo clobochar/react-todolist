@@ -12,8 +12,6 @@ const Input = ({ onClick }) => {
       <input
         ref={inputElement}
         type="text"
-        //value={value}
-        //onChange={handleChange}
         placeholder="insert value here.."
       />
       <button onClick={() => handleClick(inputElement.current.value)}>
